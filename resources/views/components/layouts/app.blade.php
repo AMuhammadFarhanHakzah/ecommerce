@@ -15,5 +15,6 @@
         </main>
         @livewire('partials.footer')
         @livewireScripts
+        <script>{{asset('resources/js/app.js')}}</script>
     </body>
 </html>
