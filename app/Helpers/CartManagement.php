@@ -11,21 +11,26 @@ class CartManagement {
 
     static public function addItemToCart($product_id) {
         $cart_items = self::getCartItemsFromCookie();
-
+    
+        // Handle case when $cart_items is not an array
+        if (!is_array($cart_items)) {
+            $cart_items = [];
+        }
+    
         $existing_item = null;
-
+    
         foreach($cart_items as $key => $item) {
             if($item['product_id'] == $product_id) {
                 $existing_item = $key;
                 break;
             }
         }
-
+    
         if($existing_item !== null) {
             $cart_items[$existing_item]['quantity']++;
             $cart_items[$existing_item]['total_amount'] = $cart_items[$existing_item]['quantity'] * $cart_items[$existing_item]['unit_amount'];
-
-        }else {
+    
+        } else {
             $product = Product::where('id', $product_id)->first(['id', 'name', 'price', 'images']);
             if($product) {
                 $cart_items[] = [
@@ -38,11 +43,11 @@ class CartManagement {
                 ];
             }
         }
-
+    
         self::addCartItemsToCookie($cart_items);
         return count($cart_items);
     }
-
+    
 
     // remove item from cart
     static public function removeCartItem($product_id) {
